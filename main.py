@@ -55,8 +55,6 @@ class FrameGrabber:
             self.frame[:16, :, 0] = tmp
         elif ch == 'red_l':
             self.frame[16:, :, 0] = tmp
-            if self.callback is not None:
-                self.callback(self.frame)
         elif ch == 'green_u':
             self.frame[:16, :, 1] = tmp
         elif ch == 'green_l':
@@ -65,6 +63,8 @@ class FrameGrabber:
             self.frame[:16, :, 2] = tmp
         elif ch == 'blue_l':
             self.frame[16:, :, 2] = tmp
+            if self.callback is not None:
+                self.callback(self.frame)
 
     def set_callback(self, cb):
         self.callback = cb
@@ -81,6 +81,7 @@ class Display(threading.Thread):
         options.chain_length = 1
         options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
+        options.gpio_slowdown = 4
         options.disable_hardware_pulsing = True
         options.drop_privileges = False
         self.matrix = RGBMatrix(options=options)
@@ -119,7 +120,7 @@ class Display(threading.Thread):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    fg = FrameGrabber('192.168.1.121')
+    fg = FrameGrabber('192.168.0.2')
     dis = Display()
     fg.set_callback(dis.set_frame)
     dis.test()
