@@ -121,6 +121,8 @@ class Display(threading.Thread):
         options.gpio_slowdown = 1
         self.matrix = RGBMatrix(options=options)
 
+        self.double_buffer = self.matrix.CreateFrameCanvas()
+
         self.running = True
 
     def test(self):
@@ -148,8 +150,9 @@ class Display(threading.Thread):
     def run(self):
         while self.running:
             pil_image = Image.fromarray(self.frame)
-            self.matrix.Clear()
-            self.matrix.SetImage(pil_image)
+            self.double_buffer.Clear()
+            self.double_buffer.SetImage(pil_image)
+            self.double_buffer = self.matrix.SwapOnVSync(self.double_buffer)
             time.sleep(0.1)
 
 
