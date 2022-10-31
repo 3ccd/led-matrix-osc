@@ -114,7 +114,6 @@ class Display(threading.Thread):
         options.led_rgb_sequence = "RGB"
         options.pixel_mapper_config = ""
         options.panel_type = ""
-        options.limit_refresh_rate_hz = 30
         options.drop_privileges = False
         options.disable_hardware_pulsing = True
         options.show_refresh_rate = 1
@@ -149,11 +148,11 @@ class Display(threading.Thread):
 
     def run(self):
         while self.running:
-            pil_image = Image.fromarray(self.frame)
+            pil_image = Image.fromarray(self.frame.copy())
             self.double_buffer.Clear()
             self.double_buffer.SetImage(pil_image)
             self.double_buffer = self.matrix.SwapOnVSync(self.double_buffer)
-            time.sleep(0.1)
+            time.sleep(0.01)
 
 
 # Press the green button in the gutter to run the script.
