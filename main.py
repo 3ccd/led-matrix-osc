@@ -89,7 +89,7 @@ class Camera(threading.Thread):
                 time.sleep(1)
                 continue
 
-            dst = cv2.resize(frame, dsize=(32, 64), interpolation=cv2.INTER_LINEAR)
+            dst = cv2.resize(frame, dsize=(64, 32), interpolation=cv2.INTER_LINEAR)
             dst = cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
             self.callback(dst)
 
@@ -108,6 +108,7 @@ class Display(threading.Thread):
         options.gpio_slowdown = 4
         options.disable_hardware_pulsing = True
         options.drop_privileges = False
+        options.limit_refresh = 30
         self.matrix = RGBMatrix(options=options)
 
         self.running = True
