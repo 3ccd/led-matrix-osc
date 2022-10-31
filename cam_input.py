@@ -15,10 +15,12 @@ class CamInput(SampleBase):
 
         # let's scroll
         while True:
-            ret, frame = self.cap.read()
+            ret, frame_cam = self.cap.read()
             if ret is False:
                 time.sleep(0.5)
                 continue
+
+            frame = frame_cam.copy()
 
             dst = cv2.resize(frame, dsize=(64, 32), interpolation=cv2.INTER_LINEAR)
             dst = cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
