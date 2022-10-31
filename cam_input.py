@@ -23,7 +23,9 @@ class CamInput(SampleBase):
             dst = cv2.resize(frame, dsize=(64, 32), interpolation=cv2.INTER_LINEAR)
             dst = cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
 
-            double_buffer.SetImage(dst)
+            pil_image = Image.fromarray(dst)
+
+            double_buffer.SetImage(pil_image)
 
             double_buffer = self.matrix.SwapOnVSync(double_buffer)
             time.sleep(0.01)
