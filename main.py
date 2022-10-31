@@ -114,7 +114,7 @@ class Display(threading.Thread):
         options.led_rgb_sequence = "RGB"
         options.pixel_mapper_config = ""
         options.panel_type = ""
-        options.limit_refresh_rate = 30
+        options.limit_refresh_rate_hz = 30
         options.drop_privileges = False
         options.disable_hardware_pulsing = True
         options.show_refresh_rate = 1
