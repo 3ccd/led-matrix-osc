@@ -2,6 +2,7 @@ import threading
 import time
 
 import numpy as np
+import cv2
 
 from PIL import Image
 
@@ -70,6 +71,29 @@ class FrameGrabber:
         self.callback = cb
 
 
+class Camera(threading.Thread):
+    def __init__(self):
+        super(Camera, self).__init__()
+        self.cap = cv2.VideoCapture(0)
+        self.callback = None
+
+    def run(self):
+        if self.callback is None:
+            return
+        if not self.cap.isOpened():
+            return
+
+        while True:
+            ret, frame = self.cap.read()
+            if ret is False:
+                time.sleep(1)
+                continue
+
+            dst = cv2.resize(frame, dsize=(32, 64), interpolation=cv2.INTER_LINEAR)
+            dst = cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
+            self.callback(dst)
+
+
 class Display(threading.Thread):
     def __init__(self):
         super().__init__()
@@ -120,11 +144,13 @@ class Display(threading.Thread):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    fg = FrameGrabber('192.168.0.2')
+    # fg = FrameGrabber('192.168.0.2')
+    cam = Camera()
     dis = Display()
-    fg.set_callback(dis.set_frame)
+    # fg.set_callback(dis.set_frame)
+    cam.callback = dis.set_frame
     dis.test()
-    fg.start()
+    cam.start()
     dis.start()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
